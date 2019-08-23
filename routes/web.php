@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
+
+
+Route::group(['middleware' => 'auth'], function() {
+	Route::resource('alumnos', 'AlumnoController');
+	Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 });
