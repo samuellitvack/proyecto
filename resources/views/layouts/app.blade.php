@@ -6,15 +6,14 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Aulasoft') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -34,18 +33,37 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    @if((Auth::user()->rol == 1) or (Auth::user()->rol == 2))
+
+                    @guest 
+                    <ul class="navbar-nav mr-auto">
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Consultar') }}<span class="caret"></span></a>
+                    </ul>
+                    @endguest
+
+                    @auth
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Alumnos') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('alumnos/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Alumnos') }}<span class="caret"></span></a>
+                            </li>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="location.href='alumnos/nuevo'">{{ __('Nuevo') }}</a>
-                               <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Administrar') }}</a>
-                                </div>
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Cursos') }}<span class="caret"></span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Materias') }}<span class="caret"></span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Profesores') }}<span class="caret"></span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="usuarios" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Usuarios') }}<span class="caret"></span></a>
                             </li>
                     </ul>
-                    @endif
+                    @endauth
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -54,12 +72,8 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Ingresar') }}</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a>
-                                </li>
-                            @endif
-                        @else
+                        @endguest
+                        @auth
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -69,7 +83,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Salir') }}
+                                        {{ __('Cerrar sesión') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -77,7 +91,7 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                        @endauth
                     </ul>
                 </div>
             </div>
@@ -87,5 +101,8 @@
             @yield('content')
         </main>
     </div>
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>    
+<script src="{{ asset('js/app.js') }}"></script>   
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script> 
 </body>
 </html>

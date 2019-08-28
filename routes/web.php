@@ -15,8 +15,13 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-
 Route::group(['middleware' => 'auth'], function() {
-	Route::resource('alumnos', 'AlumnoController');
+	Route::get('alumnos', 'AlumnoController@index');
+	Route::get('alumnos/gestion', 'AlumnoController@create');
+	Route::resource('cursos', 'CursoController');
+	Route::resource('materias', 'MateriaController');
+	Route::resource('preceptores', 'PreceptorController');
+	Route::resource('profesores', 'ProfesorController');
+	Route::get('usuarios', 'HomeController@create');
 	Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 });

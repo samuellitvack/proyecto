@@ -13,7 +13,6 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    Su rol es {{ Auth::user()->rol }}
                 </div>
             </div>
         </div>

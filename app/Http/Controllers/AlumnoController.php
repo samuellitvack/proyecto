@@ -14,7 +14,8 @@ class AlumnoController extends Controller
      */
     public function index()
     {
-        //
+        $alumnos = Alumno::All();
+        return $alumnos;
     }
 
     /**
@@ -24,7 +25,7 @@ class AlumnoController extends Controller
      */
     public function create()
     {
-        return view('/');
+        return view("alumnos.index");
     }
 
     /**
