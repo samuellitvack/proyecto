@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use DB;
 
 class AlumnoController extends Controller
 {
@@ -14,7 +16,7 @@ class AlumnoController extends Controller
      */
     public function index()
     {
-        $alumnos = Alumno::All();
+        $alumnos = Alumno::select('id', 'DNI', 'Nombre', 'Apellido', 'Fecha_nac', 'Telefono', 'Direccion', 'Nacionalidad')->get();
         return $alumnos;
     }
 
@@ -36,7 +38,30 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['DNI'=> 'required|integer', 'Nombre'=>'required|alpha', 'Apellido'=>'required|alpha', 'Fecha_nac'=>'required|date', 'Telefono'=>'required', 'Direccion'=>'required', 'Nacionalidad'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $alumno = new Alumno();
+            $alumno->DNI = $request->get('DNI');
+            $alumno->Nombre = $request->get('Nombre');
+            $alumno->Apellido = $request->get('Apellido');
+            $alumno->Fecha_nac = $request->get('Fecha_nac');
+            $alumno->Telefono = $request->get('Telefono');
+            $alumno->Direccion = $request->get('Direccion');
+            $alumno->Nacionalidad = $request->get('Nacionalidad');
+
+            $existe = DB::table('table_alumnos')->where('DNI', $request->get('DNI'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'El alumno ya se encuentra en el sistema']);
+            }else{
+                $alumno->save();
+                return response()->json(['error' => false, 'mensaje' => 'Alumno cargada correctamente', 'ultimoid' => $alumno->id]);
+            }
+        }   
     }
 
     /**
@@ -68,9 +93,32 @@ class AlumnoController extends Controller
      * @param  \App\Alumno  $alumno
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Alumno $alumno)
+    public function update(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['DNI'=> 'required|integer', 'Nombre'=>'required|alpha', 'Apellido'=>'required|alpha', 'Fecha_nac'=>'required|date', 'Telefono'=>'required', 'Direccion'=>'required', 'Nacionalidad'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $alumno = Alumno::find($request->get('id'));
+            $alumno->DNI = $request->get('DNI');
+            $alumno->Nombre = $request->get('Nombre');
+            $alumno->Apellido = $request->get('Apellido');
+            $alumno->Fecha_nac = $request->get('Fecha_nac');
+            $alumno->Telefono = $request->get('Telefono');
+            $alumno->Direccion = $request->get('Direccion');
+            $alumno->Nacionalidad = $request->get('Nacionalidad');
+
+            $existe = DB::table('table_alumnos')->where('DNI', $request->get('DNI'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'El alumno ya se encuentra en el sistema']);
+            }else{
+                $alumno->save();
+                return response()->json(['error' => false, 'mensaje' => 'Alumno modificado correctamente']);
+            }
+        }   
     }
 
     /**
@@ -79,8 +127,12 @@ class AlumnoController extends Controller
      * @param  \App\Alumno  $alumno
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Alumno $alumno)
+    public function destroy($id)
     {
-        //
+        DB::table("table_cursando")->where('id_alumno', $id)->delete();
+
+        $alumno = Alumno::find($id);
+        $alumno->delete();
+        return response()->json(['mensaje' => 'Alumno eliminado correctamente']); 
     }
 }

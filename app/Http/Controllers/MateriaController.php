@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Materia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use DB;
 
 class MateriaController extends Controller
 {
@@ -14,7 +16,8 @@ class MateriaController extends Controller
      */
     public function index()
     {
-        //
+        $materias = Materia::select('id', 'Nombre')->get();
+        return $materias;
     }
 
     /**
@@ -24,7 +27,7 @@ class MateriaController extends Controller
      */
     public function create()
     {
-        //
+        return view("materias.index");
     }
 
     /**
@@ -35,7 +38,24 @@ class MateriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['Nombre'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $materia = new Materia();
+            $materia->Nombre = $request->get('Nombre');
+
+            $existe = DB::table('table_materias')->where('Nombre', $request->get('Nombre'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'Esta materia ya existe']);
+            }else{
+                $materia->save();
+                return response()->json(['error' => false, 'mensaje' => 'Materia cargada correctamente', 'ultimoid' => $materia->id]);
+            }
+        }   
     }
 
     /**
@@ -67,9 +87,26 @@ class MateriaController extends Controller
      * @param  \App\Materia  $materia
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Materia $materia)
+    public function update(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['Nombre'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $materia = Materia::find($request->get('id'));
+            $materia->Nombre = $request->get('Nombre');
+
+            $existe = DB::table('table_materias')->where('Nombre', $request->get('Nombre'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'Esta materia ya existe']);
+            }else{
+                $materia->save();
+                return response()->json(['error' => false, 'mensaje' => 'Materia modificada correctamente']);
+            }
+        }   
     }
 
     /**
@@ -78,8 +115,12 @@ class MateriaController extends Controller
      * @param  \App\Materia  $materia
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Materia $materia)
+    public function destroy($id)
     {
-        //
+        DB::table("table_materiascursos")->where('id_materia', $id)->delete();
+        
+        $materia = Materia::find($id);
+        $materia->delete();
+        return response()->json(['mensaje' => 'Materia eliminada correctamente']);
     }
 }

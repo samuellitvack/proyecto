@@ -13,6 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    Bievenido al sistema {{Auth::user()->name}}
                 </div>
             </div>
         </div>

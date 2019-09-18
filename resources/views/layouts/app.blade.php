@@ -13,8 +13,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -44,23 +43,27 @@
                     @auth
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="{{ url('alumnos/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Alumnos') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('alumnos/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><span class="caret"><i class="fa fa-user"></i></span> {{ __('Alumnos') }}</a>
                             </li>
 
                             <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Cursos') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('cursos/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-book"></i> {{ __('Cursos') }}<span class="caret"></span></a>
                             </li>
 
                             <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Materias') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('materias/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-tags"></i> {{ __('Materias') }}<span class="caret"></span></a>
                             </li>
 
                             <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Profesores') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('preceptores/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-user-circle"></i></span> {{ __('Preceptores') }}<span class="caret"></span></a>
                             </li>
 
                             <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="usuarios" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Usuarios') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('profesores/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-user-circle-o"></i></span> {{ __('Profesores') }}<span class="caret"></span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('usuarios') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-user-o"></i></span> {{ __('Usuarios') }}<span class="caret"></span></a>
                             </li>
                     </ul>
                     @endauth
@@ -101,8 +104,7 @@
             @yield('content')
         </main>
     </div>
-<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>    
 <script src="{{ asset('js/app.js') }}"></script>   
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/jquery-tabledit@1.0.0/jquery.tabledit.min.js"></script>
 </body>
 </html>

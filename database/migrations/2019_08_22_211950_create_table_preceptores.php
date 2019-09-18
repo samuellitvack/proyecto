@@ -19,6 +19,9 @@ class CreateTablePreceptores extends Migration
             $table->string('Nombre');
             $table->string('Apellido');
             $table->date('Fecha_nac');
+            $table->string('Telefono');
+            $table->string('Direccion');
+            $table->string('Nacionalidad');
             $table->timestamps();
         });
     }

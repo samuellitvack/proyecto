@@ -20,6 +20,10 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('alumnos-component', require('./components/AlumnosComponent.vue').default);
+Vue.component('profesores-component', require('./components/ProfesoresComponent.vue').default);
+Vue.component('preceptores-component', require('./components/PreceptoresComponent.vue').default);
+Vue.component('materias-component', require('./components/MateriasComponent.vue').default);
+Vue.component('cursos-component', require('./components/CursosComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

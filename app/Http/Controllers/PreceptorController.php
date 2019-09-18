@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Preceptor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use DB;
 
 class PreceptorController extends Controller
 {
@@ -14,7 +16,8 @@ class PreceptorController extends Controller
      */
     public function index()
     {
-        //
+        $preceptores = Preceptor::all();
+        return $preceptores;
     }
 
     /**
@@ -24,7 +27,7 @@ class PreceptorController extends Controller
      */
     public function create()
     {
-        //
+        return view("preceptores.index");
     }
 
     /**
@@ -35,7 +38,30 @@ class PreceptorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['DNI'=> 'required|integer', 'Nombre'=>'required|alpha', 'Apellido'=>'required|alpha', 'Fecha_nac'=>'required|date', 'Telefono'=>'required', 'Direccion'=>'required', 'Nacionalidad'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $preceptor = new Preceptor();
+            $preceptor->DNI = $request->get('DNI');
+            $preceptor->Nombre = $request->get('Nombre');
+            $preceptor->Apellido = $request->get('Apellido');
+            $preceptor->Fecha_nac = $request->get('Fecha_nac');
+            $preceptor->Telefono = $request->get('Telefono');
+            $preceptor->Direccion = $request->get('Direccion');
+            $preceptor->Nacionalidad = $request->get('Nacionalidad');
+
+            $existe = DB::table('table_preceptores')->where('DNI', $request->get('DNI'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'El preceptor ya se encuentra en el sistema']);
+            }else{
+                $preceptor->save();
+                return response()->json(['error' => false, 'mensaje' => 'Preceptor cargada correctamente', 'ultimoid' => $preceptor->id]);
+            }
+        }   
     }
 
     /**
@@ -67,9 +93,32 @@ class PreceptorController extends Controller
      * @param  \App\Preceptor  $preceptor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Preceptor $preceptor)
+    public function update(Request $request)
     {
-        //
+        $validar = Validator::make($request->all(), ['DNI'=> 'required|integer', 'Nombre'=>'required|alpha', 'Apellido'=>'required|alpha', 'Fecha_nac'=>'required|date', 'Telefono'=>'required', 'Direccion'=>'required', 'Nacionalidad'=>'required']);
+
+        if($validar->fails()){
+            $errores = $validar->errors();
+            return response()->json(['error' => true, 'mensaje' => $errores->all()]);
+        }else{
+            $preceptor = Preceptor::find($request->get('id'));
+            $preceptor->DNI = $request->get('DNI');
+            $preceptor->Nombre = $request->get('Nombre');
+            $preceptor->Apellido = $request->get('Apellido');
+            $preceptor->Fecha_nac = $request->get('Fecha_nac');
+            $preceptor->Telefono = $request->get('Telefono');
+            $preceptor->Direccion = $request->get('Direccion');
+            $preceptor->Nacionalidad = $request->get('Nacionalidad');
+
+            $existe = DB::table('table_preceptores')->where('DNI', $request->get('DNI'))->count();
+
+            if($existe > 0){
+                return response()->json(['error' => true, 'mensaje' => 'El preceptor ya se encuentra en el sistema']);
+            }else{
+                $preceptor->save();
+                return response()->json(['error' => false, 'mensaje' => 'Preceptor modificado correctamente']);
+            }
+        }   
     }
 
     /**
@@ -78,8 +127,10 @@ class PreceptorController extends Controller
      * @param  \App\Preceptor  $preceptor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Preceptor $preceptor)
+    public function destroy($id)
     {
-        //
+        $preceptor = Preceptor::find($id);
+        $preceptor->delete();
+        return response()->json(['mensaje' => 'Preceptor eliminado correctamente']);    
     }
 }
