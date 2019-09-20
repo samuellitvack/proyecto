@@ -122,7 +122,6 @@
               <th>DNI</th>
               <th>Nombre</th>
               <th>Apellido</th>
-              <th>Notas</th>
             </tr>
           </thead>
           <tbody>
@@ -130,35 +129,8 @@
                 <td>{{ alumno.DNI}}</td>
                 <td>{{ alumno.Nombre }}</td>
                 <td>{{ alumno.Apellido}}</td>
-                <td><button data-toggle="modal" data-target="" class="btn btn-secondary" onclick="document.getElementById('table_notas').setAttribute('style', 'display: block')" @click="buscarnotas(curso.id, alumno.id)">Administrar</button></td>
             </tr>
           </tbody>
-          </table>
-          <table style="display: none;" id="table_notas" class='table table-bordered'>
-          <button class="btn btn-dark">Cerrar</button>
-            <thead>
-             <tr>
-              <th>Materia</th>
-              <th>Primer trimestre</th>
-              <th>Segundo trimestre</th>
-              <th>Tercer trimestre</th>
-              <th>Acción</th>
-             </tr>
-           </thead>
-           <tbody>
-           <tr v-for="(m, index) in materias_curso">
-            <td>{{ m.Nombre }}</td>
-            <td><input value="6.00" type="text" id="nota_1" name="nota_1" disabled="true"></td>
-            <td><input value="6.50" type="text" id="nota_2" name="nota_2" disabled="true"></td>
-            <td><input value="8.00" type="text" id="nota_3" name="nota_3" disabled="true"></td>
-            <!--
-            <td><button id="btn_editar" onclick="document.getElementById('nota_1').disabled = false; document.getElementById('nota_2').disabled = false; document.getElementById('nota_3').disabled = false;    document.getElementById('btn_guardar<').style.display = 'block'; document.getElementById('btn_editar').style.display = 'none';" class="btn btn-secondary"><i class="fa fa-edit"></i></button>
-            -->
-            <td>
-            <button class="btn btn-secondary"><i class="fa fa-edit"></i></button>
-            <button style="display: none" id="btn_guardar" class="btn btn-secondary"><i class="fa fa-save"></i></button></td>
-           </tr>
-           </tbody>
           </table>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
@@ -175,11 +147,100 @@
     </div>
   </div>
 
+  <div class="modal fade" id="notasmodal" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div style="max-width: 90%;" class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titulo">Calificaciones</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <table id="alumnostabla" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr v-for="alumno in alumnos_curso">
+                <td>{{ alumno.DNI}}</td>
+                <td>{{ alumno.Nombre }}</td>
+                <td>{{ alumno.Apellido}}</td>
+                <td><button onClick="document.getElementById('div_tabla_notas').scrollIntoView({block: 'end',  behavior: 'smooth'});" id="btn_adminotas" data-toggle="modal" data-target="" class="btn btn-secondary" @click="efectos_1(); asignar_alumno(alumno); buscarnotas(curso.id, alumno.id)">Administrar</button></td>
+            </tr>
+          </tbody>
+          </table>
+
+          <div style="display:none; overflow-x:auto;" id="div_tabla_notas" class="table-responsive">
+          <button @click="guardar_notas(); efectos_2()" onClick="window.scrollTo(0, 0);" id="cerrar_tabla" class="btn btn-dark">Guardar cambios</button><label><b>&nbsp;&nbsp;&nbsp;Alumno: {{ alumno.Nombre }} {{ alumno.Apellido}}</b></label>
+          <table id="table_notas" class='table table-bordered'>
+            <thead>
+             <tr>
+              <th>Materia</th>
+              <th>Primer trimestre</th>
+              <th>Segundo trimestre</th>
+              <th>Tercer trimestre</th>
+             </tr>
+           </thead>
+           <tbody>
+           <tr v-for="nota in notas">
+            <td>{{ nota.materia_nombre }}</td>
+            <td><input v-model="nota.nota1" type="text" id="nota_1"></td>
+            <td><input v-model="nota.nota2" type="text" id="nota_2"></td>
+            <td><input v-model="nota.nota3" type="text" id="nota_3"></td>
+           </tr>
+           </tbody>
+          </table>
+          </div>
+
+          <div id="errores" @click="mostrarError=false" v-if="mostrarError">
+              <p v-for="error in errores">
+                  {{ error }}
+              </p>
+           </div>
+           <!--
+           <pre>
+           {{ $data }}
+           </pre>
+           -->
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="modaldelcurso" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <h4> Está seguro/a que quiere eliminar este curso?</h4>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+           <button @click="eliminarCurso()" type="button" class="btn btn-danger">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="mensaje" @click="mostrarMensaje=false" v-if="mostrarMensaje">
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de cursos</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#ncursomodal" style="color: white">Cargar</button><br><br>
+  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#ncursomodal" style="color: white">Crear</button><br><br>
 
   <table id="tabla_cursos" class="table table-striped table-bordered table-hover">
   <thead>
@@ -194,12 +255,13 @@
                 <td>{{ curso.Nivel }}° {{ curso.Division }}</td>
                 <td>{{ curso.Año}}</td>
                 <td>
-                <button data-toggle="modal" data-target="#edcursomodal" class="btn btn-primary" @click="buscarmaterias(curso.id); asignar(curso)">Modificar</button>
+                <button data-toggle="modal" data-target="#edcursomodal" class="btn btn-primary" @click="asignar(curso); buscarmaterias(curso.id)">Modificar</button>
                 <button data-toggle="modal" data-target="#alumnoscursomodal" class="btn btn-secondary" @click="asignar(curso);pos=index; buscaralumnos(curso.id);buscarmaterias(curso.id)">Alumnos</button>
+                <button data-toggle="modal" data-target="#notasmodal" class="btn btn-info" @click="asignar(curso);pos=index; buscaralumnos(curso.id)">Notas</button>
                 <!--
                 <button data-toggle="modal" data-target="#alumnoscursomodal" class="btn btn-dark" @click="asignar(curso);pos=index; buscaralumnos(curso.id);">Asistencias</button>
                 -->
-                <button class="btn btn-danger" @click="asignar(curso);pos=index;eliminarCurso()">Eliminar</button>
+                <button data-toggle="modal" data-target="#modaldelcurso" class="btn btn-danger" @click="asignar(curso);pos=index">Eliminar</button>
                 </td>
             </tr>
     </tbody>
@@ -213,6 +275,11 @@
     border: none;
     background-color: transparent;
   }
+
+  input:focus{
+    outline: none;
+  }
+
   #errores{ 
     color: red;
   }
@@ -224,6 +291,7 @@
   thead{
     background-color: #f0f0f5;
   }
+
 
 </style>
 
@@ -247,9 +315,11 @@
                 materias_curso: [],
                 materias: [],
                 alumnos: [],
+                alumno: [],
                 alumnos_curso: [],
                 mensaje: '',
-                curso: []
+                curso: [],
+                notas: []
             }
         },
 
@@ -258,6 +328,7 @@
             this.cargar_alumnos();
             this.cargar_materias();
             this.cargar_cursos();
+            this.efectos_3();
         },
 
         methods: {
@@ -265,10 +336,38 @@
                 this.curso = curso;
             },
 
+            asignar_alumno(alumno){
+                this.alumno = alumno;
+            },
+
             cerrar_modal(modal_n){
                 $(function () {
                     $('#'+modal_n).modal('toggle');
                 });
+            },
+
+            efectos_1(){
+                $(function () {
+                    $('#div_tabla_notas').attr('style','display:block');
+                });
+            },
+
+            efectos_2(){
+                $(function () {
+                    $('#div_tabla_notas').attr('style','display:none');
+                });
+                this.notas = [];
+                this.alumno = [];
+            },
+
+            efectos_3(){
+              $(function (){
+                 $("#notasmodal").on('hide.bs.modal', function(){
+                  $('#div_tabla_notas').attr('style','display:none');
+                  this.notas = [];
+                  this.alumno = [];
+                });
+              });
             },
 
             limpiarinputs(){
@@ -322,6 +421,7 @@
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
+                    this.cerrar_modal('#modaldelcurso');
                 });
             },
 
@@ -400,7 +500,17 @@
             },
 
             buscarnotas(id_curso, id_alumno){
+              axios.get('/notas/'+id_curso+"/"+id_alumno).then(response=>{
+                    this.notas = response.data;
+                });
+            },
 
+            guardar_notas(){
+              let formdata = new FormData();
+              formdata.append("Notas", JSON.stringify(this.notas));
+              formdata.append("id_alumno", this.alumno.id);
+
+              axios.post('/notas/actualizar', formdata);
             }
         }
     }

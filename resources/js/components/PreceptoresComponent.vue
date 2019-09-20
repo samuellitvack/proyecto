@@ -115,6 +115,25 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modaldelpreceptor" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <h4> Está seguro/a que quiere borrar este preceptor?</h4>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+           <button @click="eliminarPreceptor()" type="button" class="btn btn-danger">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="mensaje" @click="mostrarMensaje=false" v-if="mostrarMensaje">
     {{ mensaje }}
   </div>
@@ -136,7 +155,7 @@
                 <td>{{ preceptor.Apellido }}</td>
                 <td>
                 <button data-toggle="modal" data-target="#edpreceptormodal" class="btn btn-primary" @click="asignar(preceptor)">Modificar</button>
-                <button class="btn btn-danger" @click="asignar(preceptor);pos=index;eliminarPreceptor()">Borrar</button>
+                <button data-toggle="modal" data-target="#modaldelpreceptor" class="btn btn-danger" @click="asignar(preceptor);pos=index">Borrar</button>
                 </td>
             </tr>
         </tbody>
@@ -251,6 +270,7 @@
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
+                    this.cerrar_modal('modaldelpreceptor');
                 });
             },
 

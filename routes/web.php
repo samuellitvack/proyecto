@@ -49,6 +49,9 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('cursos/alumnos/{id}', 'CursoController@alumnos_curso');
 	Route::post('cursos/alumnos/actualiar_alumnos', 'CursoController@alumnos_en_curso');
 
+	Route::get('notas/{id_curso}/{id_alumno}', 'NotaController@index');
+	Route::post('notas/actualizar', 'NotaController@update');
+
 	Route::get('usuarios', 'HomeController@create');
 	Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 });

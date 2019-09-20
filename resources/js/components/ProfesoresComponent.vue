@@ -115,6 +115,25 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modaldelprofesor" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <h4> Está seguro/a que quiere borrar este profesor?</h4>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+           <button @click="eliminarProfesor()" type="button" class="btn btn-danger">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="mensaje" @click="mostrarMensaje=false" v-if="mostrarMensaje">
     {{ mensaje }}
   </div>
@@ -137,7 +156,7 @@
                 <td>{{ profesor.Apellido }}</td>
                 <td>
                 <button data-toggle="modal" data-target="#edprofesormodal" class="btn btn-primary" @click="asignar(profesor)">Modificar</button>
-                <button class="btn btn-danger" @click="asignar(profesor);pos=index;eliminarProfesor()">Eliminar</button>
+                <button data-toggle="modal" data-target="#modaldelprofesor" class="btn btn-danger" @click="asignar(profesor);pos=index">Eliminar</button>
                 </td>
             </tr>
         </tbody>
@@ -248,10 +267,11 @@
 
             eliminarProfesor(){
                 axios.delete('/profesores/eliminar/'+this.profesor.id).then( response =>{
-                    this.profesor.splice(this.pos, 1);
+                    this.profesores.splice(this.pos, 1);
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
+                    this.cerrar_modal('modaldelprofesor');
                 });
             },
 

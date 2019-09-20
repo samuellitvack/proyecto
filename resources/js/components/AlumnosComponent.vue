@@ -115,11 +115,30 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modaldelalumno" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <h4> Está seguro/a que quiere borrar este alumno?</h4>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+           <button @click="eliminarAlumno()" type="button" class="btn btn-danger">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="mensaje" @click="mostrarMensaje=false" v-if="mostrarMensaje">
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de alumnos</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nalumnomodal" style="color: white">Cargar</button><br><br>
+  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nalumnomodal" style="color: white">Nuevo</button><br><br>
 
   <table id="tabla_alumnos" class="table table-striped table-bordered table-hover">
   <thead>
@@ -135,7 +154,7 @@
                 <td>{{ alumno.DNI }}</td>
                 <td>{{ alumno.Nombre }}</td>
                 <td>{{ alumno.Apellido }}</td>
-                <td><button data-toggle="modal" data-target="#edalumnomodal" class="btn btn-primary" @click="asignar(alumno)">Modificar</button><button class="btn btn-danger" @click="asignar(alumno);pos=index;eliminarAlumno()">Eliminar</button></td>
+                <td><button data-toggle="modal" data-target="#edalumnomodal" class="btn btn-primary" @click="asignar(alumno)">Modificar</button><button data-toggle="modal" data-target="#modaldelalumno" class="btn btn-danger" @click="asignar(alumno);pos=index">Eliminar</button></td>
             </tr>
         </tbody>
   </table>
@@ -249,6 +268,7 @@
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
+                    this.cerrar_modal('modaldelalumno');
                 });
             },
 

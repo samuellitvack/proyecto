@@ -127,7 +127,7 @@ class ProfesorController extends Controller
      * @param  \App\Profesor  $profesor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Profesor $profesor)
+    public function destroy($id)
     {
         $profesor = Profesor::find($id);
         $profesor->delete();

@@ -59,11 +59,30 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modaldelmateria" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <h4> Está seguro/a que quiere eliminar esta materia?</h4>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+           <button @click="eliminarMateria()" type="button" class="btn btn-danger">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="mensaje" @click="mostrarMensaje=false" v-if="mostrarMensaje">
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de materias</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nmateriamodal" style="color: white">Cargar</button><br><br>
+  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nmateriamodal" style="color: white">Crear</button><br><br>
 
   <table id="tabla_materias" class="table table-striped table-bordered table-hover">
   <thead>
@@ -77,7 +96,7 @@
                 <td>{{ materia.Nombre }}</td>
                 <td>
                 <button data-toggle="modal" data-target="#edmateriamodal" class="btn btn-primary" @click="asignar(materia)">Modificar</button>
-                <button class="btn btn-danger" @click="asignar(materia);pos=index;eliminarMateria()">Borrar</button></td>
+                <button data-toggle="modal" data-target="#modaldelmateria" class="btn btn-danger" @click="asignar(materia);pos=index">Eliminar</button></td>
             </tr>
         </tbody>
   </table>
@@ -180,6 +199,7 @@
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
+                    this.cerrar_modal('modaldelmateria');
                 });
             },
 
