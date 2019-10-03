@@ -118,6 +118,7 @@ class MateriaController extends Controller
     public function destroy($id)
     {
         DB::table("table_materiascursos")->where('id_materia', $id)->delete();
+        DB::table("table_nota")->where('id_mat', $id)->delete();
         
         $materia = Materia::find($id);
         $materia->delete();

@@ -14,6 +14,8 @@
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('boletin', 'BoletinController@index');
+Route::post('boletin/descargar', 'BoletinController@download');
 
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('alumnos', 'AlumnoController@index');
@@ -48,10 +50,17 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('cursos/materias/{id}', 'CursoController@materias_curso');
 	Route::get('cursos/alumnos/{id}', 'CursoController@alumnos_curso');
 	Route::post('cursos/alumnos/actualiar_alumnos', 'CursoController@alumnos_en_curso');
+	Route::get('cursos/asistencias/{id_curso}/{fecha}', 'AsistenciaController@index');
+	Route::post('cursos/asistencias/actualizar', 'AsistenciaController@update');
 
 	Route::get('notas/{id_curso}/{id_alumno}', 'NotaController@index');
 	Route::post('notas/actualizar', 'NotaController@update');
 
+	Route::get('configuracion', 'ConfiguracionController@create');
+	Route::get('configuracion/datos', 'ConfiguracionController@index');
+	Route::post('configuracion/actualizar', 'ConfiguracionController@update');
+
 	Route::get('usuarios', 'HomeController@create');
 	Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 });
+

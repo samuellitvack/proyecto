@@ -56,7 +56,8 @@ class AlumnoController extends Controller
             $existe = DB::table('table_alumnos')->where('DNI', $request->get('DNI'))->count();
 
             if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El alumno ya se encuentra en el sistema']);
+                $mensaje = ['El alumno ya se encuentra en el sistema'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
                 $alumno->save();
                 return response()->json(['error' => false, 'mensaje' => 'Alumno cargada correctamente', 'ultimoid' => $alumno->id]);
@@ -110,14 +111,8 @@ class AlumnoController extends Controller
             $alumno->Direccion = $request->get('Direccion');
             $alumno->Nacionalidad = $request->get('Nacionalidad');
 
-            $existe = DB::table('table_alumnos')->where('DNI', $request->get('DNI'))->count();
-
-            if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El alumno ya se encuentra en el sistema']);
-            }else{
-                $alumno->save();
-                return response()->json(['error' => false, 'mensaje' => 'Alumno modificado correctamente']);
-            }
+            $alumno->save();
+            return response()->json(['error' => false, 'mensaje' => 'Alumno modificado correctamente']);
         }   
     }
 
@@ -130,6 +125,8 @@ class AlumnoController extends Controller
     public function destroy($id)
     {
         DB::table("table_cursando")->where('id_alumno', $id)->delete();
+        DB::table("table_nota")->where('id_alumno', $id)->delete();
+        DB::table("table_asistencias")->where('id_alumno', $id)->delete();
 
         $alumno = Alumno::find($id);
         $alumno->delete();

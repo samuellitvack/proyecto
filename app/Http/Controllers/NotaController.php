@@ -95,7 +95,6 @@ WHERE table_materiascursos.id_curso = ".$id_curso));
     {
         $notas = json_decode($request->get('Notas'), true);
         $id_alumno = $request->get('id_alumno');
-
         foreach($notas as $nota){
             $id_curso = $nota['id_curso'];
             $id_materia = $nota['id_materia'];

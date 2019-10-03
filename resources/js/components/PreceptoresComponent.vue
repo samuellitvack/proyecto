@@ -45,8 +45,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -71,7 +71,7 @@
           <form>
             <div class="form-group">
               <label for="preceptor-dni" class="col-form-label">DNI:</label>
-              <input type="text" class="form-control" id="preceptor-dni" v-model="preceptor.DNI">
+              <input type="text" class="form-control" id="preceptor-dni" v-model="preceptor.DNI" readonly="true">
             </div>
             <div class="form-group">
               <label for="preceptor-nombre" class="col-form-label">Nombre:</label>
@@ -102,8 +102,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -138,7 +138,7 @@
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de preceptores</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#npreceptormodal" style="color: white">Nuevo</button><br><br>
+  <button @click="limpiarinputs(); limpiarerrores();" type="button" class="btn btn-success" data-toggle="modal" data-target="#npreceptormodal" style="color: white">Nuevo</button><br><br>
   <table id="tabla_preceptores" class="table table-striped table-bordered table-hover">
   <thead>
     <tr>
@@ -154,13 +154,13 @@
                 <td>{{ preceptor.Nombre }}</td>
                 <td>{{ preceptor.Apellido }}</td>
                 <td>
-                <button data-toggle="modal" data-target="#edpreceptormodal" class="btn btn-primary" @click="asignar(preceptor)">Modificar</button>
+                <button data-toggle="modal" data-target="#edpreceptormodal" class="btn btn-primary" @click="limpiarerrores(); asignar(preceptor)">Modificar</button>
                 <button data-toggle="modal" data-target="#modaldelpreceptor" class="btn btn-danger" @click="asignar(preceptor);pos=index">Borrar</button>
                 </td>
             </tr>
         </tbody>
   </table>
-<!--
+  <!--
 <pre>
 {{ $data }}
 </pre>
@@ -222,6 +222,11 @@
                 this.preceptor = [];
             },
 
+            limpiarerrores(){
+              this.errores = '';
+              this.mensaje = '';
+            },
+
             tabla_preceptores(){
                     $(document).ready(function() {
                         $('#tabla_preceptores').DataTable({
@@ -251,15 +256,16 @@
 
                 axios.post('/preceptores/nuevo', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
-                        this.preceptores.push({id:response.data.ultimoid,DNI:this.preceptor.DNI,Nombre:this.preceptor.Nombre,Apellido:this.preceptor.Apellido,Telefono:this.preceptor.Telefono,Direccion:this.preceptor.Direccion,Nacionalidad:this.preceptor.Nacionalidad});
+                        this.preceptores.push({id:response.data.ultimoid,DNI:this.preceptor.DNI,Nombre:this.preceptor.Nombre,Apellido:this.preceptor.Apellido,Fecha_nac:this.preceptor.Fecha_nac,Telefono:this.preceptor.Telefono,Direccion:this.preceptor.Direccion,Nacionalidad:this.preceptor.Nacionalidad});
                         this.mostrarError = false;
                         this.mostrarMensaje = true;
                         this.mensaje = response.data.mensaje;
                         this.cerrar_modal('npreceptormodal');
+                        this.preceptor = this.preceptor;
                     }
                 });
             },
@@ -288,7 +294,7 @@
 
                 axios.post('/preceptores/actualizar', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{

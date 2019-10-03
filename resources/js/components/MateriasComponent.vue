@@ -19,7 +19,9 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-                  {{ errores['mensaje'] }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
+              </p>
            </div>
         </div>
         <div class="modal-footer">
@@ -48,7 +50,9 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-                  {{ errores['mensaje'] }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
+              </p>
            </div>
         </div>
         <div class="modal-footer">

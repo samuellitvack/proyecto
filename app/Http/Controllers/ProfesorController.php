@@ -56,7 +56,8 @@ class ProfesorController extends Controller
             $existe = DB::table('table_profesores')->where('DNI', $request->get('DNI'))->count();
 
             if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El profesor ya se encuentra en el sistema']);
+                $mensaje = ['El profesor ya se encuentra en el sistema'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
                 $profesor->save();
                 return response()->json(['error' => false, 'mensaje' => 'Profesor cargada correctamente', 'ultimoid' => $profesor->id]);
@@ -110,14 +111,8 @@ class ProfesorController extends Controller
             $profesor->Direccion = $request->get('Direccion');
             $profesor->Nacionalidad = $request->get('Nacionalidad');
 
-            $existe = DB::table('table_profesores')->where('DNI', $request->get('DNI'))->count();
-
-            if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El profesor ya se encuentra en el sistema']);
-            }else{
-                $profesor->save();
-                return response()->json(['error' => false, 'mensaje' => 'Profesor modificado correctamente']);
-            }
+            $profesor->save();
+            return response()->json(['error' => false, 'mensaje' => 'Profesor modificado correctamente']);
         }   
     }
 

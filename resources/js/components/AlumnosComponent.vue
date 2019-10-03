@@ -45,8 +45,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -71,7 +71,7 @@
           <form>
             <div class="form-group">
               <label for="alumno-dni" class="col-form-label">DNI:</label>
-              <input type="text" class="form-control" id="alumno-dni" v-model="alumno.DNI">
+              <input type="text" class="form-control" id="alumno-dni" v-model="alumno.DNI" readonly="true">
             </div>
             <div class="form-group">
               <label for="alumno-nombre" class="col-form-label">Nombre:</label>
@@ -102,8 +102,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -138,7 +138,7 @@
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de alumnos</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nalumnomodal" style="color: white">Nuevo</button><br><br>
+  <button @click="limpiarinputs(); limpiarerrores();" type="button" class="btn btn-success" data-toggle="modal" data-target="#nalumnomodal" style="color: white">Nuevo</button><br><br>
 
   <table id="tabla_alumnos" class="table table-striped table-bordered table-hover">
   <thead>
@@ -154,11 +154,11 @@
                 <td>{{ alumno.DNI }}</td>
                 <td>{{ alumno.Nombre }}</td>
                 <td>{{ alumno.Apellido }}</td>
-                <td><button data-toggle="modal" data-target="#edalumnomodal" class="btn btn-primary" @click="asignar(alumno)">Modificar</button><button data-toggle="modal" data-target="#modaldelalumno" class="btn btn-danger" @click="asignar(alumno);pos=index">Eliminar</button></td>
+                <td><button data-toggle="modal" data-target="#edalumnomodal" class="btn btn-primary" @click="limpiarerrores(); asignar(alumno)">Modificar</button><button data-toggle="modal" data-target="#modaldelalumno" class="btn btn-danger" @click="asignar(alumno);pos=index">Eliminar</button></td>
             </tr>
         </tbody>
   </table>
-<!--
+  <!--
 <pre>
 {{ $data }}
 </pre>
@@ -220,6 +220,11 @@
                 this.alumno = [];
             },
 
+            limpiarerrores(){
+              this.errores = '';
+              this.mensaje = '';
+            },
+
             tabla_alumnos(){
                     $(document).ready(function() {
                         $('#tabla_alumnos').DataTable({
@@ -249,11 +254,11 @@
 
                 axios.post('/alumnos/nuevo', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
-                        this.alumnos.push({id:response.data.ultimoid,DNI:this.alumno.DNI,Nombre:this.alumno.Nombre,Apellido:this.alumno.Apellido,Telefono:this.alumno.Telefono,Direccion:this.alumno.Direccion,Nacionalidad:this.alumno.Nacionalidad});
+                        this.alumnos.push({id:response.data.ultimoid,DNI:this.alumno.DNI,Nombre:this.alumno.Nombre,Apellido:this.alumno.Apellido,Fecha_nac:this.alumno.Fecha_nac,Telefono:this.alumno.Telefono,Direccion:this.alumno.Direccion,Nacionalidad:this.alumno.Nacionalidad});
                         this.mostrarError = false;
                         this.mostrarMensaje = true;
                         this.mensaje = response.data.mensaje;
@@ -286,7 +291,7 @@
 
                 axios.post('/alumnos/actualizar', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{

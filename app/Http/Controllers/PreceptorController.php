@@ -56,7 +56,8 @@ class PreceptorController extends Controller
             $existe = DB::table('table_preceptores')->where('DNI', $request->get('DNI'))->count();
 
             if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El preceptor ya se encuentra en el sistema']);
+                $mensaje = ['El preceptor ya se encuentra en el sistema'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
                 $preceptor->save();
                 return response()->json(['error' => false, 'mensaje' => 'Preceptor cargada correctamente', 'ultimoid' => $preceptor->id]);
@@ -110,14 +111,8 @@ class PreceptorController extends Controller
             $preceptor->Direccion = $request->get('Direccion');
             $preceptor->Nacionalidad = $request->get('Nacionalidad');
 
-            $existe = DB::table('table_preceptores')->where('DNI', $request->get('DNI'))->count();
-
-            if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'El preceptor ya se encuentra en el sistema']);
-            }else{
-                $preceptor->save();
-                return response()->json(['error' => false, 'mensaje' => 'Preceptor modificado correctamente']);
-            }
+            $preceptor->save();
+            return response()->json(['error' => false, 'mensaje' => 'Preceptor modificado correctamente']);
         }   
     }
 

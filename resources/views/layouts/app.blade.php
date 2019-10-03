@@ -37,7 +37,7 @@
                     @guest 
                     <ul class="navbar-nav mr-auto">
                             <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false" v-pre>{{ __('Consultar') }}<span class="caret"></span></a>
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('boletin') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-search"></i><span class="caret">{{ __('Consultar') }}</span></a>
                     </ul>
                     @endguest
 
@@ -61,6 +61,14 @@
 
                             <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link" href="{{ url('profesores/gestion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-user-circle-o"></i></span> {{ __('Profesores') }}<span class="caret"></span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('boletin') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-search"></i><span class="caret">{{ __('Consultar') }}</span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link" href="{{ url('configuracion') }}" role="button" aria-haspopup="true" aria-expanded="false" v-pre><i class="fa fa-gear"></i></span> {{ __('Configuración') }}<span class="caret"></span></a>
                             </li>
 
                             <li class="nav-item dropdown">

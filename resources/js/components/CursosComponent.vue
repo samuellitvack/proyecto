@@ -37,7 +37,7 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
+              <p v-for="error in errores['mensaje']">
                   {{ error }}
               </p>
            </div>
@@ -86,7 +86,7 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
+              <p v-for="error in errores['mensaje']">
                   {{ error }}
               </p>
            </div>
@@ -134,7 +134,7 @@
           </table>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
+              <p v-for="error in errores['mensaje']">
                   {{ error }}
               </p>
            </div>
@@ -198,11 +198,6 @@
           </table>
           </div>
 
-          <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  {{ error }}
-              </p>
-           </div>
            <!--
            <pre>
            {{ $data }}
@@ -216,6 +211,48 @@
     </div>
   </div>
 
+ <div class="modal fade" id="asistenciasmodal" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
+    <div style="max-width: 90%;" class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titulo">Cargar Asistencias </h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+             <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <center><h2><label>Seleccionar fecha: </label><input v-model="fecha" type="date"><button class="btn btn-success" @click="buscarasistencias(curso.id,fecha); efecto_asistencia()">Buscar</button></h2></center><br>
+          <div style="display:none; overflow-x:auto;" id="div_tabla_asistencias" class="table-responsive">
+          <button @click="guardar_asistencias(); efectos_2_asistencias()" class="btn btn-dark">Guardar cambios</button><br><br>
+          <table id="asistenciastabla" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Alumno (DNI, Nombre, Apellido)</th>
+              <th>Presente</th>
+              <th>Justificada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="asistencia in asistencias">
+                <td>{{ asistencia.DNI_alumno}} {{ asistencia.Nombre_alumno }} {{ asistencia.Apellido_alumno}}</td>
+                <td><input v-model="asistencia.Presente" type="checkbox"></td>
+                <td><input v-model="asistencia.Justificada" type="checkbox"></td>
+            </tr>
+          </tbody>
+          </table>
+          </div>
+        </div>
+        <!--
+        <pre>
+        {{ $data }}
+        </pre>
+        -->
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal fade" id="modaldelcurso" tabindex="-1" role="dialog" aria-labelledby="titulo" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -241,7 +278,7 @@
   </div>
   <center><i><h3>Gestión de cursos</h3></i></center>
   <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#ncursomodal" style="color: white">Crear</button><br><br>
-
+  <div id="cursospdf">
   <table id="tabla_cursos" class="table table-striped table-bordered table-hover">
   <thead>
     <tr>
@@ -258,14 +295,13 @@
                 <button data-toggle="modal" data-target="#edcursomodal" class="btn btn-primary" @click="asignar(curso); buscarmaterias(curso.id)">Modificar</button>
                 <button data-toggle="modal" data-target="#alumnoscursomodal" class="btn btn-secondary" @click="asignar(curso);pos=index; buscaralumnos(curso.id);buscarmaterias(curso.id)">Alumnos</button>
                 <button data-toggle="modal" data-target="#notasmodal" class="btn btn-info" @click="asignar(curso);pos=index; buscaralumnos(curso.id)">Notas</button>
-                <!--
-                <button data-toggle="modal" data-target="#alumnoscursomodal" class="btn btn-dark" @click="asignar(curso);pos=index; buscaralumnos(curso.id);">Asistencias</button>
-                -->
+                <button data-toggle="modal" data-target="#asistenciasmodal" class="btn btn-dark" @click="asignar(curso);pos=index">Asistencias</button>
                 <button data-toggle="modal" data-target="#modaldelcurso" class="btn btn-danger" @click="asignar(curso);pos=index">Eliminar</button>
                 </td>
             </tr>
     </tbody>
   </table>
+  </div>
 </div>
 </div>
 </template>
@@ -314,6 +350,8 @@
                 errores: '',
                 materias_curso: [],
                 materias: [],
+                fecha: '',
+                asistencias: [],
                 alumnos: [],
                 alumno: [],
                 alumnos_curso: [],
@@ -329,6 +367,7 @@
             this.cargar_materias();
             this.cargar_cursos();
             this.efectos_3();
+            this.efectos_3_asistencias();
         },
 
         methods: {
@@ -370,6 +409,30 @@
               });
             },
 
+            efecto_asistencia(){
+              $(function (){
+                $('#div_tabla_asistencias').attr('style','display:block');
+              });
+            },
+
+            efectos_2_asistencias(){
+                $(function () {
+                    $('#div_tabla_asistencias').attr('style','display:none');
+                });
+                this.asistencias = [];
+            },
+
+            efectos_3_asistencias(){
+              $(function (){
+                 $("#asistenciasmodal").on('hide.bs.modal', function(){
+                  $('#div_tabla_asistencias').attr('style','display:none');
+                  this.asistencias = [];
+                  this.fecha = '';
+                });
+              });
+            },
+
+
             limpiarinputs(){
                 this.curso = [];
                 this.materias_curso = [];
@@ -399,10 +462,9 @@
                 formdata.append("Año", this.curso.Año);
                 formdata.append("Materias", JSON.stringify(this.materias_curso));
 
-
                 axios.post('/cursos/nuevo', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
@@ -421,7 +483,7 @@
                     this.mostrarError = false;
                     this.mostrarMensaje = true;
                     this.mensaje = response.data.mensaje;
-                    this.cerrar_modal('#modaldelcurso');
+                    this.cerrar_modal('modaldelcurso');
                 });
             },
 
@@ -436,7 +498,7 @@
 
                 axios.post('/cursos/actualizar', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
@@ -473,6 +535,19 @@
 
             alumnoslabel (option) {
               return `${option.DNI} ${option.Nombre} ${option.Apellido}`;
+            },
+
+            buscarasistencias(id_curso, fecha){
+              axios.get('/cursos/asistencias/'+id_curso+'/'+this.fecha).then(response=>{
+                    this.asistencias = response.data;
+                });
+            },
+
+            guardar_asistencias(){
+              let formdata = new FormData();
+              formdata.append("asistencias", JSON.stringify(this.asistencias));
+              formdata.append("fecha", this.fecha);
+              axios.post('/cursos/asistencias/actualizar', formdata);
             },
 
             cargar_materias(){

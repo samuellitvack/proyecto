@@ -45,8 +45,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -71,7 +71,7 @@
           <form>
             <div class="form-group">
               <label for="profesor-dni" class="col-form-label">DNI:</label>
-              <input type="text" class="form-control" id="profesor-dni" v-model="profesor.DNI">
+              <input type="text" class="form-control" id="profesor-dni" v-model="profesor.DNI" readonly="true">
             </div>
             <div class="form-group">
               <label for="profesor-nombre" class="col-form-label">Nombre:</label>
@@ -102,8 +102,8 @@
           </form>
 
           <div id="errores" @click="mostrarError=false" v-if="mostrarError">
-              <p v-for="error in errores">
-                  @{{ error }}
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
               </p>
            </div>
         </div>
@@ -138,7 +138,7 @@
     {{ mensaje }}
   </div>
   <center><i><h3>Gestión de profesores</h3></i></center>
-  <button @click="limpiarinputs()" type="button" class="btn btn-success" data-toggle="modal" data-target="#nprofesormodal" style="color: white">Nuevo</button><br><br>
+  <button @click="limpiarinputs(); limpiarerrores();" type="button" class="btn btn-success" data-toggle="modal" data-target="#nprofesormodal" style="color: white">Nuevo</button><br><br>
 
   <table id="tabla_profesores" class="table table-striped table-bordered table-hover">
   <thead>
@@ -155,7 +155,7 @@
                 <td>{{ profesor.Nombre }}</td>
                 <td>{{ profesor.Apellido }}</td>
                 <td>
-                <button data-toggle="modal" data-target="#edprofesormodal" class="btn btn-primary" @click="asignar(profesor)">Modificar</button>
+                <button data-toggle="modal" data-target="#edprofesormodal" class="btn btn-primary" @click="limpiarerrores(); asignar(profesor)">Modificar</button>
                 <button data-toggle="modal" data-target="#modaldelprofesor" class="btn btn-danger" @click="asignar(profesor);pos=index">Eliminar</button>
                 </td>
             </tr>
@@ -223,6 +223,11 @@
                 this.profesor = [];
             },
 
+            limpiarerrores(){
+              this.errores = '';
+              this.mensaje = '';
+            },
+
             tabla_profesores(){
                     $(document).ready(function() {
                         $('#tabla_profesores').DataTable({
@@ -252,11 +257,11 @@
 
                 axios.post('/profesores/nuevo', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
-                        this.profesores.push({id:response.data.ultimoid,DNI:this.profesor.DNI,Nombre:this.profesor.Nombre,Apellido:this.profesor.Apellido,Telefono:this.profesor.Telefono,Direccion:this.profesor.Direccion,Nacionalidad:this.profesor.Nacionalidad});
+                        this.profesores.push({id:response.data.ultimoid,DNI:this.profesor.DNI,Nombre:this.profesor.Nombre,Apellido:this.profesor.Apellido,Fecha_nac:this.profesor.Fecha_nac,Telefono:this.profesor.Telefono,Direccion:this.profesor.Direccion,Nacionalidad:this.profesor.Nacionalidad});
                         this.mostrarError = false;
                         this.mostrarMensaje = true;
                         this.mensaje = response.data.mensaje;
@@ -289,7 +294,7 @@
 
                 axios.post('/profesores/actualizar', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{
