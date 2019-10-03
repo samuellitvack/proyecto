@@ -50,7 +50,8 @@ class MateriaController extends Controller
             $existe = DB::table('table_materias')->where('Nombre', $request->get('Nombre'))->count();
 
             if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'Esta materia ya existe']);
+                $mensaje = ['Esta materia ya existe'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
                 $materia->save();
                 return response()->json(['error' => false, 'mensaje' => 'Materia cargada correctamente', 'ultimoid' => $materia->id]);
@@ -101,7 +102,8 @@ class MateriaController extends Controller
             $existe = DB::table('table_materias')->where('Nombre', $request->get('Nombre'))->count();
 
             if($existe > 0){
-                return response()->json(['error' => true, 'mensaje' => 'Esta materia ya existe']);
+                $mensaje = ['Esta materia ya existe'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
                 $materia->save();
                 return response()->json(['error' => false, 'mensaje' => 'Materia modificada correctamente']);

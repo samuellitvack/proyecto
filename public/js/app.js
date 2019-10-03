@@ -2679,6 +2679,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2888,44 +2894,56 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     guardar_asistencias: function guardar_asistencias() {
+      var _this7 = this;
+
       var formdata = new FormData();
       formdata.append("asistencias", JSON.stringify(this.asistencias));
       formdata.append("fecha", this.fecha);
-      axios.post('/cursos/asistencias/actualizar', formdata);
+      axios.post('/cursos/asistencias/actualizar', formdata).then(function (response) {
+        if (response.data.error) {
+          _this7.errores = response.data;
+          _this7.mostrarMensaje = false;
+          _this7.mostrarError = true;
+        } else {
+          _this7.efectos_2_asistencias();
+
+          _this7.errores = '';
+        }
+      });
     },
     cargar_materias: function cargar_materias() {
-      var _this7 = this;
+      var _this8 = this;
 
       axios.get('/materias').then(function (response) {
-        _this7.materias = response.data;
+        _this8.materias = response.data;
       });
     },
     cargar_alumnos: function cargar_alumnos() {
-      var _this8 = this;
+      var _this9 = this;
 
       axios.get('/alumnos').then(function (response) {
-        _this8.alumnos = response.data;
+        _this9.alumnos = response.data;
       });
     },
     buscarmaterias: function buscarmaterias(id_curso) {
-      var _this9 = this;
+      var _this10 = this;
 
       axios.get('/cursos/materias/' + id_curso).then(function (response) {
-        _this9.materias_curso = response.data;
+        _this10.materias_curso = response.data;
       });
     },
     buscaralumnos: function buscaralumnos(id_curso) {
-      var _this10 = this;
+      var _this11 = this;
 
       axios.get('/cursos/alumnos/' + id_curso).then(function (response) {
-        _this10.alumnos_curso = response.data;
+        _this11.alumnos_curso = response.data;
       });
     },
     buscarnotas: function buscarnotas(id_curso, id_alumno) {
-      var _this11 = this;
+      var _this12 = this;
 
       axios.get('/notas/' + id_curso + "/" + id_alumno).then(function (response) {
-        _this11.notas = response.data;
+        _this12.notas = response.data;
       });
     },
     guardar_notas: function guardar_notas() {
@@ -3171,7 +3189,7 @@ __webpack_require__.r(__webpack_exports__);
       formdata.append("Nombre", this.materia.Nombre);
       axios.post('/materias/actualizar', formdata).then(function (response) {
         if (response.data.error) {
-          _this4.errores = response.data.mensaje;
+          _this4.errores = response.data;
           _this4.mostrarMensaje = false;
           _this4.mostrarError = true;
         } else {
@@ -8372,7 +8390,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ninput {\n  border: none;\n  background-color: transparent;\n}\ninput:focus{\n  outline: none;\n}\n#errores{ \n  color: red;\n}\n#mensaje{\n  color: green;\n}\nthead{\n  background-color: #f0f0f5;\n}\n\n\n", ""]);
+exports.push([module.i, "\ninput {\n  border: none;\n  background-color: transparent;\n}\ninput:focus{\n  outline: none;\n}\n#errores{ \n  color: red;\n  font-size: 20px;\n}\n#mensaje{\n  color: green;\n}\nthead{\n  background-color: #f0f0f5;\n}\n\n\n", ""]);
 
 // exports
 
@@ -57236,6 +57254,7 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
+                            attrs: { disabled: "" },
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -57287,7 +57306,7 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
-                            attrs: { id: "curso-division" },
+                            attrs: { id: "curso-division", disabled: "" },
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -57339,7 +57358,7 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
-                            attrs: { id: "curso-anio" },
+                            attrs: { id: "curso-anio", disabled: "" },
                             on: {
                               change: function($event) {
                                 var $$selectedVal = Array.prototype.filter
@@ -57898,14 +57917,37 @@ var render = function() {
                           attrs: { id: "div_tabla_asistencias" }
                         },
                         [
+                          _vm.mostrarError
+                            ? _c(
+                                "div",
+                                {
+                                  attrs: { id: "errores" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.mostrarError = false
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.errores["mensaje"], function(error) {
+                                  return _c("p", [
+                                    _vm._v(
+                                      "\n                  " +
+                                        _vm._s(error) +
+                                        "\n              "
+                                    )
+                                  ])
+                                }),
+                                0
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
                           _c(
                             "button",
                             {
                               staticClass: "btn btn-dark",
                               on: {
                                 click: function($event) {
-                                  _vm.guardar_asistencias()
-                                  _vm.efectos_2_asistencias()
+                                  return _vm.guardar_asistencias()
                                 }
                               }
                             },

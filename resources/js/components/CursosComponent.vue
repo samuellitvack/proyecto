@@ -63,19 +63,19 @@
           <form>
             <div class="form-group">
               <label for="curso-nivel" class="col-form-label">Año:</label>
-              <select class="form-control" v-model="curso.Nivel">
+              <select class="form-control" v-model="curso.Nivel" disabled>
                    <option v-for="i in 6" v-bind:value="i">{{ i }}</option>
               </select>
             </div>
             <div class="form-group">
               <label for="curso-division" class="col-form-label">División:</label>
-              <select class="form-control" id="curso-division" v-model="curso.Division">
+              <select class="form-control" id="curso-division" v-model="curso.Division" disabled>
                    <option v-for="i in 10" v-bind:value="i">{{ i }}</option>
               </select>
             </div>
             <div class="form-group">
               <label for="curso-anio" class="col-form-label">Año de cursada:</label>
-              <select class="form-control" id="curso-anio" v-model="curso.Año">
+              <select class="form-control" id="curso-anio" v-model="curso.Año" disabled>
                    <option v-for="i in 131" v-bind:value=(i+1899)>{{ i+1899 }}</option>
               </select>
             </div>
@@ -223,7 +223,12 @@
         <div class="modal-body">
           <center><h2><label>Seleccionar fecha: </label><input v-model="fecha" type="date"><button class="btn btn-success" @click="buscarasistencias(curso.id,fecha); efecto_asistencia()">Buscar</button></h2></center><br>
           <div style="display:none; overflow-x:auto;" id="div_tabla_asistencias" class="table-responsive">
-          <button @click="guardar_asistencias(); efectos_2_asistencias()" class="btn btn-dark">Guardar cambios</button><br><br>
+          <div id="errores" @click="mostrarError=false" v-if="mostrarError">
+              <p v-for="error in errores['mensaje']">
+                  {{ error }}
+              </p>
+           </div>
+          <button @click="guardar_asistencias()" class="btn btn-dark">Guardar cambios</button><br><br>
           <table id="asistenciastabla" class="table table-bordered">
           <thead>
             <tr>
@@ -318,6 +323,7 @@
 
   #errores{ 
     color: red;
+    font-size: 20px;
   }
 
   #mensaje{
@@ -547,7 +553,16 @@
               let formdata = new FormData();
               formdata.append("asistencias", JSON.stringify(this.asistencias));
               formdata.append("fecha", this.fecha);
-              axios.post('/cursos/asistencias/actualizar', formdata);
+              axios.post('/cursos/asistencias/actualizar', formdata).then( response =>{
+                    if(response.data.error){
+                        this.errores = response.data;
+                        this.mostrarMensaje = false;
+                        this.mostrarError = true;
+                    }else{
+                      this.efectos_2_asistencias();
+                      this.errores = '';
+                    }
+                });
             },
 
             cargar_materias(){

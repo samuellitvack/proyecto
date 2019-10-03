@@ -90,24 +90,30 @@ INNER JOIN table_alumnos ON table_alumnos.id = table_cursando.id_alumno WHERE ta
             $id_curso = $asistencia['id_curso'];
             $presente = $asistencia['Presente'];
             $justificada = $asistencia['Justificada'];
-            if($presente){
-                $presente = 1;
-            }else{
-                $presente = 0;
-            }
 
-            if($justificada){
-                $justificada = 1;
+            if($presente && $justificada){
+                $mensaje = ['Error. Revise las casillas seleccionadas'];
+                return response()->json(['error' => true, 'mensaje' => $mensaje]);
             }else{
-                $justificada = 0;
-            }
+                if($presente){
+                    $presente = 1;
+                }else{
+                    $presente = 0;
+                }
 
-            $res = DB::table('table_asistencias')->where('id_alumno', $id_alumno)->where('id_curso', $id_curso)->where('Fecha', $fecha)->count();
+                if($justificada){
+                    $justificada = 1;
+                }else{
+                    $justificada = 0;
+                }
 
-            if($res > 0){
-                DB::table('table_asistencias')->where('id_alumno', $id_alumno)->where('id_curso', $id_curso)->where('Fecha', $fecha)->update(['Presente' => $presente, 'Justificada' => $justificada]);
-            }else{
-                DB::table('table_asistencias')->insert(['id_alumno' => $id_alumno, 'id_curso' => $id_curso, 'Presente' => $presente, 'Justificada' => $justificada, 'Fecha' => $fecha]);
+                $res = DB::table('table_asistencias')->where('id_alumno', $id_alumno)->where('id_curso', $id_curso)->where('Fecha', $fecha)->count();
+
+                if($res > 0){
+                    DB::table('table_asistencias')->where('id_alumno', $id_alumno)->where('id_curso', $id_curso)->where('Fecha', $fecha)->update(['Presente' => $presente, 'Justificada' => $justificada]);
+                }else{
+                    DB::table('table_asistencias')->insert(['id_alumno' => $id_alumno, 'id_curso' => $id_curso, 'Presente' => $presente, 'Justificada' => $justificada, 'Fecha' => $fecha]);
+                }
             }
         }    
     }

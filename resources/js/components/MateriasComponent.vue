@@ -215,7 +215,7 @@
 
                 axios.post('/materias/actualizar', formdata).then( response =>{
                     if(response.data.error){
-                        this.errores = response.data.mensaje;
+                        this.errores = response.data;
                         this.mostrarMensaje = false;
                         this.mostrarError = true;
                     }else{

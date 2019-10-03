@@ -111,38 +111,31 @@ class CursoController extends Controller
             $curso->Division = $request->get('Division');
             $curso->Año = $request->get('Año');
 
-            $existe = DB::table('table_cursos')->where('Nivel', $request->get('Nivel'))->where('Division', $request->get('Division'))->where('Año', $request->get('Año'))->count();
-
-            if($existe > 0){
-                $mensaje = ['Este curso ya existe'];
-                return response()->json(['error' => true, 'mensaje' => $mensaje]);
-            }else{
-                $curso->save();
-                //Si la materia no está en el curso, se agrega
-                foreach($materias as $materia){
-                    $id = $materia['id'];
-                    $res = DB::table('table_materiascursos')->where('id_materia', $id)->where('id_curso', $request->get('id'))->count();
-                    if($res == 0){
-                        $res = DB::table('table_materiascursos')->insert(['id_curso' => $request->get('id'), 'id_materia' => $id]);
-                    }
+            $curso->save();
+            //Si la materia no está en el curso, se agrega
+            foreach($materias as $materia){
+                $id = $materia['id'];
+                $res = DB::table('table_materiascursos')->where('id_materia', $id)->where('id_curso', $request->get('id'))->count();
+                if($res == 0){
+                    $res = DB::table('table_materiascursos')->insert(['id_curso' => $request->get('id'), 'id_materia' => $id]);
                 }
-
-                //Borrar materia del curso
-                foreach($materias_actual as $am){
-                    $e = 0;
-                    foreach($materias as $m){
-                        if($am['id'] == $m['id']){
-                            $e = 1;
-                        }
-                    }
-
-                    if($e != 1){
-                        DB::table('table_materiascursos')->where('id_materia', $am['id'])->where('id_curso', $request->get('id'))->delete();
-                    }
-                }
-
-                return response()->json(['error' => false, 'mensaje' => 'Curso modificado correctamente']);
             }
+
+            //Borrar materia del curso
+            foreach($materias_actual as $am){
+                $e = 0;
+                foreach($materias as $m){
+                    if($am['id'] == $m['id']){
+                        $e = 1;
+                    }
+                }
+
+                if($e != 1){
+                    DB::table('table_materiascursos')->where('id_materia', $am['id'])->where('id_curso', $request->get('id'))->delete();
+                }
+            }
+
+            return response()->json(['error' => false, 'mensaje' => 'Curso modificado correctamente']);
         }   
     }
 
