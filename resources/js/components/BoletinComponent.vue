@@ -1,6 +1,7 @@
 <template>
  <div class="row justify-content-center">
  <div class="col-md-8">
+      <center><h2>Descargar boletín de calificaciones</h2></center>
       <label for="dni-alumno" class="col-form-label">DNI</label>
       <input type="text" class="form-control" v-model="curso.DNI" placeholder="Ingrese su DNI">
       <label for="curso-nivel" class="col-form-label">Año:</label>

@@ -2200,6 +2200,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2685,6 +2686,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2762,15 +2765,16 @@ __webpack_require__.r(__webpack_exports__);
         $('#div_tabla_asistencias').attr('style', 'display:none');
       });
       this.asistencias = [];
+      this.fecha = '';
     },
     efectos_3_asistencias: function efectos_3_asistencias() {
       $(function () {
         $("#asistenciasmodal").on('hide.bs.modal', function () {
           $('#div_tabla_asistencias').attr('style', 'display:none');
-          this.asistencias = [];
-          this.fecha = '';
         });
       });
+      this.asistencias = [];
+      this.fecha = '';
     },
     limpiarinputs: function limpiarinputs() {
       this.curso = [];
@@ -56449,6 +56453,10 @@ var render = function() {
       "div",
       { staticClass: "col-md-8" },
       [
+        _c("center", [
+          _c("h2", [_vm._v("Descargar boletín de calificaciones")])
+        ]),
+        _vm._v(" "),
         _c(
           "label",
           { staticClass: "col-form-label", attrs: { for: "dni-alumno" } },
@@ -57232,164 +57240,6 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
                     _c("form", [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-form-label",
-                            attrs: { for: "curso-nivel" }
-                          },
-                          [_vm._v("Año:")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.curso.Nivel,
-                                expression: "curso.Nivel"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: { disabled: "" },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.curso,
-                                  "Nivel",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          _vm._l(6, function(i) {
-                            return _c("option", { domProps: { value: i } }, [
-                              _vm._v(_vm._s(i))
-                            ])
-                          }),
-                          0
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-form-label",
-                            attrs: { for: "curso-division" }
-                          },
-                          [_vm._v("División:")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.curso.Division,
-                                expression: "curso.Division"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: { id: "curso-division", disabled: "" },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.curso,
-                                  "Division",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          _vm._l(10, function(i) {
-                            return _c("option", { domProps: { value: i } }, [
-                              _vm._v(_vm._s(i))
-                            ])
-                          }),
-                          0
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "col-form-label",
-                            attrs: { for: "curso-anio" }
-                          },
-                          [_vm._v("Año de cursada:")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.curso.Año,
-                                expression: "curso.Año"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: { id: "curso-anio", disabled: "" },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.curso,
-                                  "Año",
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          _vm._l(131, function(i) {
-                            return _c(
-                              "option",
-                              { domProps: { value: i + 1899 } },
-                              [_vm._v(_vm._s(i + 1899))]
-                            )
-                          }),
-                          0
-                        )
-                      ]),
-                      _vm._v(" "),
                       _c(
                         "div",
                         { staticClass: "form-group" },

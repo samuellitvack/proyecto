@@ -61,6 +61,7 @@
         </div>
         <div class="modal-body">
           <form>
+          <!--
             <div class="form-group">
               <label for="curso-nivel" class="col-form-label">Año:</label>
               <select class="form-control" v-model="curso.Nivel" disabled>
@@ -79,6 +80,7 @@
                    <option v-for="i in 131" v-bind:value=(i+1899)>{{ i+1899 }}</option>
               </select>
             </div>
+            -->
             <div class="form-group">
               <label for="curso-asignaturas" class="col-form-label">Asignaturas:</label>
               <multiselect v-model="materias_curso" :options="materias" :multiple="true" track-by="id" :custom-label="materiaslabel"></multiselect>
@@ -426,16 +428,17 @@
                     $('#div_tabla_asistencias').attr('style','display:none');
                 });
                 this.asistencias = [];
+                this.fecha = '';
             },
 
             efectos_3_asistencias(){
               $(function (){
                  $("#asistenciasmodal").on('hide.bs.modal', function(){
                   $('#div_tabla_asistencias').attr('style','display:none');
-                  this.asistencias = [];
-                  this.fecha = '';
                 });
               });
+              this.asistencias = [];
+              this.fecha = '';
             },
 
 

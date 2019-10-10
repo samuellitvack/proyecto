@@ -100,22 +100,24 @@ class BoletinController extends Controller
 
         if($buscar_alumno == 0 || $buscar_curso == 0){
             return response()->json(['error' => true, 'mensaje' => 'No se encontraron resultados']);
+        }else{
+            $cursando = DB::table('table_cursando')->where('id_alumno', $id_alumno[0]['id'])->where('id_curso', $id_curso[0]['id'])->count();
+            if($cursando == 0){
+                return response()->json(['error' => true, 'mensaje' => 'No se encontraron resultados']);
+            }
         }
 
-        $notas = DB::select(DB::raw("SELECT table_materias.Nombre as Nombre_materia,table_alumnos.Nombre as Nombre_alumno, table_alumnos.Apellido as Apellido_alumno, table_alumnos.DNI as DNI_alumno, table_nota.* FROM table_alumnos INNER JOIN table_nota ON table_alumnos.id = table_nota.id_alumno INNER JOIN table_materias ON table_nota.id_mat = table_materias.id  WHERE table_nota.id_alumno = ".$id_alumno[0]['id']." AND table_nota.id_curso = ".$id_curso[0]['id']));
+        $notas = DB::select(DB::raw("SELECT table_materias.Nombre as Nombre_materia, table_nota.* FROM table_nota INNER JOIN table_materias ON table_nota.id_mat = table_materias.id  WHERE table_nota.id_alumno = ".$id_alumno[0]['id']." AND table_nota.id_curso = ".$id_curso[0]['id']));
 
-        if(!$notas){
-            return response()->json(['error' => true, 'mensaje' => 'No se encontraron resultados 2']);
-        }
+        $alumno = DB::select(DB::raw('SELECT table_alumnos.DNI as DNI_alumno, table_alumnos.Nombre as Nombre_alumno, table_alumnos.Apellido as Apellido_alumno FROM table_alumnos WHERE table_alumnos.id = '.$id_alumno[0]['id']));
 
-        $asistencias = Asistencia::select('Presente', 'Justificada', 'Fecha')->where('id_alumno', $id_alumno)->where('id_curso', $id_curso)->get();
+        $curso = DB::select(DB::raw('SELECT table_cursos.Nivel as Curso_nivel, table_cursos.Division as Curso_division, table_cursos.Año as Curso_año FROM table_cursos WHERE table_cursos.id = '.$id_curso[0]['id']));
 
-        /*
-        $pdf = PDF::loadView('boletin.pdf', compact('notas', 'asistencias', 'materias'));
-                */
-        $arreglo = Curso::all();
-        $pdf = PDF::loadView('boletin.pdf', compact('arreglo'));
+        $inasistencia = Asistencia::select('id')->where('id_alumno', $id_alumno[0]['id'])->where('id_curso', $id_curso[0]['id'])->where('Presente', '0')->count();
 
+        $justificada = Asistencia::select('id')->where('id_alumno', $id_alumno[0]['id'])->where('id_curso', $id_curso[0]['id'])->where('Justificada', '1')->count();
+
+        $pdf = PDF::loadView('boletin.pdf', compact('notas', 'alumno', 'curso', 'inasistencia', 'justificada'));
         return $pdf->download('boletin_'.$request->get('DNI').'.pdf');
     }
 }
