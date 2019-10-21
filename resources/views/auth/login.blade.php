@@ -39,6 +39,13 @@
                             </div>
                         </div>
 
+                        <hr> 
+                           <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                 <a href="{{ url('/auth/redirect/github') }}" class="btn btn-primary"><i class="fa fa-github"></i> Github</a>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">

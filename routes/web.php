@@ -17,6 +17,10 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('boletin', 'BoletinController@index');
 Route::post('boletin/descargar', 'BoletinController@download');
 
+Route::get('/auth/redirect/{provider}', 'SocialController@redirect');
+Route::get('/callback/{provider}', 'SocialController@callback');
+
+
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('alumnos', 'AlumnoController@index');
 	Route::get('alumnos/gestion', 'AlumnoController@create');
@@ -62,5 +66,8 @@ Route::group(['middleware' => 'auth'], function() {
 
 	Route::get('usuarios', 'HomeController@create');
 	Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+	Route::post('register/create', '\App\Http\Controllers\Auth\RegisterController@create');
+	Route::get('register', 'HomeController@create');
 });
 

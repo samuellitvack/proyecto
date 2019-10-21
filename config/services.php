@@ -34,4 +34,9 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'github' => [
+        'client_id' => '9e9bef957a53be4239ae',
+        'client_secret' => 'b50253c7576a30d67181ee6e3ff05a57e3da6b78',
+        'redirect' => 'http://127.0.0.1:8000/callback/github',
+    ], 
 ];

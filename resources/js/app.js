@@ -5,9 +5,78 @@
  */
 
 require('./bootstrap');
+window.VueRouter = require('vue-router').default;
+window.VueAxios = require('vue-axios').default;
+window.Axios = require('axios').default;
 
 window.Vue = require('vue');
 
+
+let Home = require('./components/HomeComponent');
+
+Vue.use(VueRouter, VueAxios, Axios);
+
+
+import Alumnos from './components/AlumnosComponent';
+import Boletin from './components/BoletinComponent';
+import Configuracion from './components/ConfiguracionComponent';
+import Cursos from './components/CursosComponent';
+import Materias from './components/MateriasComponent';
+import Preceptores from './components/PreceptoresComponent';
+import Profesores from './components/ProfesoresComponent';
+
+
+const routes = [
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
+
+        {
+            path: '/alumnos',
+            name: 'alumnos',
+            component: Alumnos
+        },
+
+        {
+            path: '/boletin',
+            name: 'boletin',
+            component: Boletin,
+        },
+
+        {
+            path: '/configuracion',
+            name: 'configuracion',
+            component: Configuracion,
+        },
+
+        {
+            path: '/cursos',
+            name: 'cursos',
+            component: Cursos,
+        },
+
+        {
+            path: '/materias',
+            name: 'materias',
+            component: Materias,
+        },
+
+        {
+            path: '/preceptores',
+            name: 'preceptores',
+            component: Preceptores,
+        },
+
+        {
+            path: '/profesores',
+            name: 'profesores',
+            component: Profesores,
+        },
+    ];
+
+const router = new VueRouter({routes: routes});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -26,6 +95,7 @@ Vue.component('materias-component', require('./components/MateriasComponent.vue'
 Vue.component('cursos-component', require('./components/CursosComponent.vue').default);
 Vue.component('configuracion-component', require('./components/ConfiguracionComponent.vue').default);
 Vue.component('boletin-component', require('./components/BoletinComponent.vue').default);
+Vue.component('home-component', require('./components/HomeComponent.vue').default);
 
 
 /**
@@ -34,6 +104,11 @@ Vue.component('boletin-component', require('./components/BoletinComponent.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
-    el: '#app',
-});
+if(document.getElementById("app")){
+ new Vue(
+ 	Vue.util.extend(
+ 		{router},
+ 		Home
+ 	)
+ ).$mount('#app');
+}
