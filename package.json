@@ -26,7 +26,7 @@
     "dependencies": {
         "datatables": "^1.10.18",
         "jquery-tabledit": "^1.0.0",
-        "jspdf": "^1.5.3",
+        "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.2.4",
         "vue-axios": "^2.1.5",
         "vue-multiselect": "^2.1.6",
